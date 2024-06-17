@@ -4,7 +4,7 @@ This is a website that teaches you how to distinguish common coffee(esspresso) d
 
 ## Tools used
 
-CSS, HTML, JavaScript, Bootstrap, jQuery, Flask
+HTML, CSS, JavaScript, Bootstrap, jQuery, Flask
 
 ## Steps to run the program
 
