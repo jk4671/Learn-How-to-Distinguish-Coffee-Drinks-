@@ -2,6 +2,10 @@
 
 This is a website that teaches you how to distinguish common coffee(esspresso) drinks.
 
+## Demo
+
+https://youtu.be/ejwLcEUHmGw?si=H6Gbi-cxx7vuA5Gi
+
 ## Tools used
 
 HTML, CSS, JavaScript, Bootstrap, jQuery, Flask
