@@ -1,0 +1,53 @@
+{% extends "layout.html" %} {% block content %}
+<script>
+	let lesson = {{ lesson | tojson }};
+	let lesson_metadata = {{ lesson_metadata | tojson }};
+	let legend = {{ legend | tojson }};
+	let ingredients = {{ ingredients | tojson }};
+</script>
+<div class="sidebar">
+	<div class="legend-section">
+		<div class="quiz-sidebar-header">Legend</div>
+		<ul class="legend">
+			{% for item in legend %}
+			<li>
+				<img
+					src="{{ url_for('static', filename=item.image) }}"
+					class="legend-image"
+					alt="{{ item.name }}" />
+				{{ item.name }}
+			</li>
+			{% endfor %}
+		</ul>
+	</div>
+</div>
+<div class="main-content">
+	<div class="container">
+		<div class="lesson-overview">{{ lesson.title }}</div>
+		<div class="lesson-subtitle">{{ lesson.subtitle }}</div>
+		<div class="category-container">
+			{% for content in lesson.contents %}
+			<div
+				class="category-card"
+				onclick="toggleDrinks(this, '{{ content.categories.title }}')">
+				{{ content.categories.title }}
+			</div>
+			{% endfor %}
+		</div>
+
+        <nav class="lesson-navigation">
+            <div class="nav-buttons">
+                {% if lesson.previous %}
+                <a class="previous" onclick="sendUserData('prev')">Home</a>
+                {% endif %}
+            </div>
+            <div class="nav-buttons">
+                {% if lesson.next %}
+                <a class="quiz disabled" onclick="sendUserData('next')">Learn</a>
+                {% endif %}
+            </div>
+        </nav>
+	</div>
+</div>
+
+{% endblock %}

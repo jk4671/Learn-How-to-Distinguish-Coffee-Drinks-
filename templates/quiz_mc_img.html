@@ -1,0 +1,93 @@
+{% extends "layout.html" %}
+{% block content %}
+<script type="text/javascript" src="{{ url_for('static', filename = 'js/quiz_mc_img.js') }}"></script>
+<script>
+    let question = {{ question | tojson }};
+</script>
+
+<div class="sidebar">
+    <div class="quiz-sidebar-header">Progress</div>
+    <ul class="legend">
+        {% for key, value in metadata.items() if key != 'review' %}
+            <li {% if key == question.id %}class="active"{% endif %}>
+                Question {{ key }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <div class="legend-section">
+        <div class="quiz-sidebar-header">Legend</div>
+        <ul class="legend">
+            {% for item in legend %}
+                <li>
+                    <img src="{{ url_for('static', filename=item.image) }}" class="legend-image" alt="{{ item.name }}">
+                    {{ item.name }}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<div class="main-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="quiz-prompt"><span class="prefix">Q{{ question.id }}.</span> {{ question.question }}</div>
+                {% if 'question_img' in question %}
+                <img src="{{ url_for('static', filename=question.question_img) }}" alt="Question Image" class="quiz-image">
+                {% endif %}
+            </div>
+        </div>
+    
+        <div class="row">
+            <div class="col-md-12">
+                <div id="feedback"></div>
+            </div>
+        </div>
+    
+        <div class="row quiz-option-row">
+            {% for option in question.options %}
+            <div class="col-md-3">
+                <div class="option">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <input type="radio" id="{{ option.id }}" name="answer" value="{{ option.id }}">
+                        </div>
+                        <div class="col-md-10">
+                            <div class="img-label"></div>
+                            {% if 'question_img' in question %}
+                            <p>{{ option.text }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div id="submit-button">
+                    <button id="submit" class="btn custom-button-color">Check</button>
+                </div>
+            </div>
+        </div>
+        
+        
+        <div class="navigation">
+            {% if question.next == 9 %}
+            <a href="{{ url_for('quiz_review') }}" class="next-button-link">
+                <nav class="quiz-navigation btn btn-primary">Submit</nav>
+            </a>
+            {% else %}
+            <a href="{{ url_for('quiz_question', question_id=question.next) }}" class="next-button-link">
+                <nav class="quiz-navigation btn btn-primary">Next</nav>
+            </a>
+            {% endif %}
+        </div>
+    </div>
+
+    
+
+</div>
+
+{% endblock %}

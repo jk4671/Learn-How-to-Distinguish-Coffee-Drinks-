@@ -1,0 +1,131 @@
+{% extends "layout.html" %}
+{% block content %}
+<script type="text/javascript" src="{{ url_for('static', filename = 'js/lesson.js') }}"></script>
+<script>
+	let lesson = {{ lesson | tojson }};
+	let lesson_metadata = {{ lesson_metadata | tojson }};
+	let legend = {{ legend | tojson }};
+	let ingredients = {{ ingredients | tojson }};
+    let completed = {{ completed | tojson }};
+</script>
+<div class="sidebar">
+    <div class="quiz-sidebar-header">Lessons</div>
+    <ul>
+        {% for key, value in lesson_metadata.contents.items() if key != 'quiz' %}
+            <li {% if lesson.id|string == key %}class="active"{% endif %}>
+                <a href="{{ url_for('learn', page_number=key) }}">{{ value }}</a>
+            </li>
+        {% endfor %}
+        <li>
+            <a href="{{ url_for('quiz_question', question_id=1) }}">Quiz</a>
+        </li>
+    </ul>
+    <div class="legend-section">
+        <div class="quiz-sidebar-header">Legend</div>
+        <ul class="legend">
+            {% for item in legend %}
+                <li>
+                    <img src="{{ url_for('static', filename=item.image) }}" class="legend-image" alt="{{ item.name }}">
+                    {{ item.name }}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<div class="main-content">
+    <div class="container">
+        <div class="lesson-header">Lesson {{ lesson.name }}</div>
+        <div class="lesson-subheader-vid">{{lesson.video_header}}</div>
+        {% if lesson.video %}
+            <div class="video">
+                <div class="video-wrapper">
+                    <iframe class="video" width="560" height="315"
+                        src="{{ lesson.video }}&start={{ lesson.video_start }}&end={{ lesson.video_end }}"
+                        title="YouTube video player"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        referrerpolicy="strict-origin-when-cross-origin"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+        {% endif %}
+
+    </div>
+    <br>
+    <hr>
+    <div class="container">
+        <div class="lesson-subheader">
+            Step-by-step Instructions
+        </div>
+        <div class="cards-wrapper">
+            <div class="card-container">
+                <div class="row">
+                    {% for drink in lesson.drinks %}
+                    <div class="col-md-6">
+                        <div class="card" data-drink-id="{{ drink.drink_id }}">
+                            <div class="card-content">
+                                {% for slide in drink.slides %}
+                                    <div class="slide" id="slide-{{ drink.drink_id }}-{{ slide.slide_id }}" {% if loop.index > 1 %}style="display: none;"{% endif %}>
+                                        {% if slide.title_type== 'text' %}
+                                            <div class="lesson-instructions">{{slide.title}}</div>
+                                        {% elif slide.title_type == 'button' %}
+                                            <div class="reset-button-container">
+                                                <button class="reset-button btn btn-secondary" onclick="resetDrink({{ drink.drink_id }})">{{ slide.title }}</button>
+                                            </div>
+                                        {% endif %}
+                                        {% if slide.body_type == 'text' %}
+                                            <div class="lesson-drink-name">{{ slide.body }}</div>
+                                            
+                                        {% elif slide.body_type == 'image' %}
+                                            <div class="image-container">
+                                                <img src="{{ url_for('static', filename=slide.body) }}" alt="{{ slide.title }}">
+                                            </div>
+                                        {% elif slide.body_type == 'drink' %}
+                                            <div class="drink">
+                                                <div class="drink-image-container" recipe={{ slide.body.ingredients }}></div>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <div class="card-footer">
+                                <div class="dots">
+                                    {% for slide in drink.slides %}
+                                        <span class="dot" onclick="goToSlide({{ drink.drink_id }}, {{ slide.slide_id }})"></span>
+                                    {% endfor %}
+                                </div>
+                                <div class="arrows">
+                                    <span class="arrow left-arrow" onclick="changeSlide({{ drink.drink_id }}, 'prev')">&#10094;</span>
+                                    <span class="arrow right-arrow" onclick="changeSlide({{ drink.drink_id }}, 'next')">&#10095;</span>
+                                </div>
+                            </div>
+                            <div class="drink-header">
+                                {{drink.slides[0].body}}
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <nav class="lesson-navigation">
+            <div class="nav-buttons">
+                {% if lesson.previous %}
+                <a class="previous" onclick="sendUserData('prev')">Previous</a>
+                {% endif %}
+                {% if lesson.next %}
+                <a class="next" onclick="sendUserData('next')">Next</a>
+                {% endif %}
+            </div>
+        </nav>
+    </div>
+    
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,97 @@
+{% extends "layout.html" %} {% block content %}
+<script
+	type="text/javascript"
+	src="{{ url_for('static', filename = 'js/quiz-drag.js') }}"></script>
+<script>
+	let legend = {{ legend | tojson }};
+	let ingredients = {{ ingredients | tojson }};
+	let question = {{ question | tojson }};
+</script>
+<div class="sidebar">
+    <div class="quiz-sidebar-header">Progress</div>
+    <ul class="legend">
+        {% for key, value in metadata.items() if key != 'review' %}
+            <li {% if key == question.id %}class="active"{% endif %}>
+                Question {{ key }}</a>
+            </li>
+        {% endfor %}
+
+    </ul>
+    <div class="legend-section">
+        <div class="quiz-sidebar-header">Legend</div>
+        <ul class="legend">
+            {% for item in legend %}
+                <li>
+                    <img src="{{ url_for('static', filename=item.image) }}" class="legend-image" alt="{{ item.name }}">
+                    {{ item.name }}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<div class="main-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="quiz-prompt"><span class="prefix">Q{{ question.id }}.</span> {{ question.question }} <span class="coffee-highlight">{{ question.text }}</span>.</div>
+                {% if 'question_img' in question %}
+                <img src="{{ url_for('static', filename=question.question_img) }}" alt="Question Image" class="quiz-image">
+                {% endif %}
+            </div>
+        </div>
+    
+        <div class="row">
+            <div class="col-md-12">
+                <div id="feedback"></div>
+            </div>
+        </div>
+    
+        <div class="row">
+            <div class="col-md-12">
+                <div id="drink"></div>
+                <div id="submit-button">
+                    <button id="submit" class="btn custom-button-color">Check</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+				<div id="ingredients">
+					<div class="ingredients-heading">Ingredients</div>
+                    <div>
+                        <ul class="ingredients-legend"></ul>
+                    </div>
+				</div>
+			</div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div id="reset-button">
+                    <button id="reset" class="btn btn-secondary">Reset</button>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="navigation">
+                    {% if question.next == 9 %}
+                    <a href="{{ url_for('quiz_review') }}" class="next-button-link">
+                        <nav class="quiz-navigation btn btn-primary">Submit</nav>
+                    </a>
+                    {% else %}
+                    <a href="{{ url_for('quiz_question', question_id=question.next) }}" class="next-button-link">
+                        <nav class="quiz-navigation btn btn-primary">Next</nav>
+                    </a>
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
