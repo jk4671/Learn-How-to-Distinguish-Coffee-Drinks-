@@ -1,8 +1,8 @@
+# Mug Mastery
+
 <p align='center'>
   <img alt="Main page" src="https://github.com/user-attachments/assets/0f1dc8d4-08ae-416b-a58a-3b0b6f8118a8">
 </p>
-
-# Mug Mastery
 
 This is a website that teaches you how to distinguish common coffee(esspresso) drinks.
 
